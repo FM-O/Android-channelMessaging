@@ -9,6 +9,11 @@ public class MessageResponseItem {
     private String message;
     private String date;
     private String imageUrl;
+    private String username;
+
+    public String getUsername() {
+        return username;
+    }
 
     public Integer getUserID() {
         return userID;

@@ -3,12 +3,15 @@ package florian.michel.channelmessaging.channel;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import com.google.gson.Gson;
@@ -20,10 +23,13 @@ import florian.michel.channelmessaging.login.LoginActivity;
 import florian.michel.channelmessaging.network.OnWSUpdateListener;
 import florian.michel.channelmessaging.network.WSRequestAsyncTask;
 
-public class ChannelActivity extends AppCompatActivity implements OnWSUpdateListener {
+public class ChannelActivity extends AppCompatActivity implements OnWSUpdateListener, View.OnClickListener {
 
     private HashMap<String,String> requestedParams = new HashMap<>();
     private ListView lvMessages;
+    private Handler mMessageHandler;
+    private EditText messageSender;
+    private Button sendButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,20 +38,15 @@ public class ChannelActivity extends AppCompatActivity implements OnWSUpdateList
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         lvMessages = (ListView) findViewById(R.id.listViewMessages);
+        messageSender = (EditText) findViewById(R.id.editSendMessage);
+        sendButton = (Button) findViewById(R.id.btnSendMessage);
+        sendButton.setOnClickListener(this);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent listChan = getIntent();
 
-        Integer channelID = listChan.getIntExtra("channelID",0);
+        Integer channelID = listChan.getIntExtra("channelID", 0);
         this.requestedParams.put("channelid", String.valueOf(channelID));
         Log.d("requestedParams:", String.valueOf(channelID));
 
@@ -56,6 +57,20 @@ public class ChannelActivity extends AppCompatActivity implements OnWSUpdateList
         WSRequestAsyncTask request = new WSRequestAsyncTask(this, "http://www.raphaelbischof.fr/messaging/?function=getmessages",this.requestedParams);
         request.addWSRequestListener(this);
         request.execute();
+
+        mMessageHandler = new Handler();
+
+        final Runnable r = new Runnable() {
+            public void run() {
+                WSRequestAsyncTask request = new WSRequestAsyncTask(ChannelActivity.this, "http://www.raphaelbischof.fr/messaging/?function=getmessages",ChannelActivity.this.requestedParams);
+                request.addWSRequestListener(ChannelActivity.this);
+                request.execute();
+                mMessageHandler.postDelayed(this, 10000);
+            }
+        };
+
+        mMessageHandler.post(r);
+
     }
 
     @Override
@@ -67,5 +82,18 @@ public class ChannelActivity extends AppCompatActivity implements OnWSUpdateList
         lvMessages.setAdapter(new ChannelAdapter(messages.getItems(), this));
 
         Log.d("reponse: ", String.valueOf(messages.getItems()[0].getImageUrl()));
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        HashMap<String,String> params;
+
+        params = this.requestedParams;
+
+        params.put("message", messageSender.getText().toString());
+
+        WSRequestAsyncTask request = new WSRequestAsyncTask(this.getApplicationContext(), "http://www.raphaelbischof.fr/messaging/?function=sendmessage", params);
+        request.execute();
     }
 }
