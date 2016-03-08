@@ -18,6 +18,8 @@ import java.util.HashMap;
 
 import florian.michel.channelmessaging.R;
 import florian.michel.channelmessaging.channel.ChannelActivity;
+import florian.michel.channelmessaging.channelfragments.ChannelListFragment;
+import florian.michel.channelmessaging.channelfragments.MessageFragment;
 import florian.michel.channelmessaging.login.LoginActivity;
 import florian.michel.channelmessaging.network.OnWSUpdateListener;
 import florian.michel.channelmessaging.network.WSRequestAsyncTask;
@@ -38,10 +40,28 @@ public class ListChannelsActivity extends AppCompatActivity implements AdapterVi
 
         Integer channelID = (int)id;
 
-        Intent ChanAct = new Intent(getApplicationContext(), ChannelActivity.class);
+        Log.d("channel id:", String.valueOf(channelID));
+
+        ChannelListFragment chfrag = (ChannelListFragment)getSupportFragmentManager().findFragmentById(R.id.fragListChannel);
+        MessageFragment msgfrag = (MessageFragment)getSupportFragmentManager().findFragmentById(R.id.fragChannelMessage);
+
+        if (msgfrag == null || !msgfrag.isInLayout()) {
+            Intent ChanAct = new Intent(getApplicationContext(), ChannelActivity.class);
+            ChanAct.putExtra("channelID", channelID);
+
+            startActivity(ChanAct);
+        } else {
+//            Intent fragAct = new Intent(getApplicationContext(), MessageFragment.class);
+//            fragAct.putExtra("channelID", channelID);
+//
+//            startActivity(fragAct);
+            msgfrag.updateChannel(channelID);
+        }
+
+        /*Intent ChanAct = new Intent(getApplicationContext(), ChannelActivity.class);
         ChanAct.putExtra("channelID", channelID);
 
-        startActivity(ChanAct);
+        startActivity(ChanAct);*/
     }
 
 }

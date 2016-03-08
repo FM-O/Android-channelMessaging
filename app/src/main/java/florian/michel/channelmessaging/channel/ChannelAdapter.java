@@ -41,6 +41,9 @@ public class ChannelAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
+        if (items == null) {
+            return 0;
+        }
         return items.length;
     }
 

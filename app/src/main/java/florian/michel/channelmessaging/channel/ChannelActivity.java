@@ -19,11 +19,12 @@ import com.google.gson.Gson;
 import java.util.HashMap;
 
 import florian.michel.channelmessaging.R;
+import florian.michel.channelmessaging.gps.GPSActivity;
 import florian.michel.channelmessaging.login.LoginActivity;
 import florian.michel.channelmessaging.network.OnWSUpdateListener;
 import florian.michel.channelmessaging.network.WSRequestAsyncTask;
 
-public class ChannelActivity extends AppCompatActivity {
+public class ChannelActivity extends GPSActivity {
 
 //    private HashMap<String,String> requestedParams = new HashMap<>();
 //    private ListView lvMessages;

@@ -1,6 +1,6 @@
 package florian.michel.channelmessaging.channelfragments;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -35,6 +35,7 @@ public class MessageFragment extends Fragment implements OnWSUpdateListener, Vie
     private Handler mMessageHandler;
     private EditText messageSender;
     private Button sendButton;
+    private Integer channelID;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
@@ -47,9 +48,10 @@ public class MessageFragment extends Fragment implements OnWSUpdateListener, Vie
 
         Intent listChan = getActivity().getIntent();
 
-        Integer channelID = listChan.getIntExtra("channelID", 0);
-        this.requestedParams.put("channelid", String.valueOf(channelID));
-        Log.d("requestedParams:", String.valueOf(channelID));
+        this.channelID = listChan.getIntExtra("channelID", 0);
+
+        this.requestedParams.put("channelid", String.valueOf(this.channelID));
+        Log.d("requestedParams:", String.valueOf(this.channelID));
 
         SharedPreferences settings = getActivity().getSharedPreferences(LoginActivity.PREFS_FILE, 0);
         String token = settings.getString("ACCESS_TOKEN", "value");
@@ -63,10 +65,12 @@ public class MessageFragment extends Fragment implements OnWSUpdateListener, Vie
 
         final Runnable r = new Runnable() {
             public void run() {
-                WSRequestAsyncTask request = new WSRequestAsyncTask(MessageFragment.this.getActivity(), "http://www.raphaelbischof.fr/messaging/?function=getmessages", MessageFragment.this.requestedParams);
-                request.addWSRequestListener(MessageFragment.this);
-                request.execute();
-                mMessageHandler.postDelayed(this, 10000);
+                if (MessageFragment.this.getActivity() != null) {
+                    WSRequestAsyncTask request = new WSRequestAsyncTask(MessageFragment.this.getActivity(), "http://www.raphaelbischof.fr/messaging/?function=getmessages", MessageFragment.this.requestedParams);
+                    request.addWSRequestListener(MessageFragment.this);
+                    request.execute();
+                    mMessageHandler.postDelayed(this, 2000);
+                }
             }
         };
 
@@ -83,7 +87,7 @@ public class MessageFragment extends Fragment implements OnWSUpdateListener, Vie
 
         lvMessages.setAdapter(new ChannelAdapter(messages.getItems(), getActivity()));
 
-        Log.d("reponse: ", String.valueOf(messages.getItems()[0].getImageUrl()));
+//        Log.d("reponse: ", String.valueOf(messages.getItems()[0].getImageUrl()));
     }
 
     @Override
@@ -97,5 +101,11 @@ public class MessageFragment extends Fragment implements OnWSUpdateListener, Vie
 
         WSRequestAsyncTask request = new WSRequestAsyncTask(getActivity().getApplicationContext(), "http://www.raphaelbischof.fr/messaging/?function=sendmessage", params);
         request.execute();
+    }
+
+    public void updateChannel(Integer channelID) {
+        this.channelID = channelID;
+        this.requestedParams.remove("channelid");
+        this.requestedParams.put("channelid", String.valueOf(this.channelID));
     }
 }
