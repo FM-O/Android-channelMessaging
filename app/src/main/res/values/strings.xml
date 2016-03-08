@@ -4,4 +4,5 @@
     <string name="title_activity_list_channels">ListChannels</string>
     <string name="title_activity_channel">ChannelActivity</string>
     <string name="send">Send</string>
+    <string name="title_activity_main_frag">MainFragActivity</string>
 </resources>

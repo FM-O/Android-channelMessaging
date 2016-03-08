@@ -22,13 +22,8 @@ import florian.michel.channelmessaging.login.LoginActivity;
 import florian.michel.channelmessaging.network.OnWSUpdateListener;
 import florian.michel.channelmessaging.network.WSRequestAsyncTask;
 
-public class ListChannelsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, OnWSUpdateListener {
+public class ListChannelsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
 
-    private static final int MY_ACTIVITY_REQUEST_CODE = 1;
-    private ListView lvChannels;
-    private ChannelsResponseItems[] listChannels = {};
-
-    private HashMap<String, String> tokens = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,25 +31,12 @@ public class ListChannelsActivity extends AppCompatActivity implements AdapterVi
         setContentView(R.layout.activity_list_channels);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        lvChannels = (ListView) findViewById(R.id.listView);
-
-        lvChannels.setOnItemClickListener(this);
-
-        SharedPreferences settings = getSharedPreferences(LoginActivity.PREFS_FILE, 0);
-
-        String token = settings.getString("ACCESS_TOKEN", "value");
-
-        this.tokens.put("accesstoken", token);
-
-        WSRequestAsyncTask request = new WSRequestAsyncTask(this.getApplicationContext(), "http://www.raphaelbischof.fr/messaging/?function=getchannels", tokens);
-        request.addWSRequestListener(this);
-        request.execute();
     }
 
     @Override
     public void onItemClick(AdapterView<?>parent, View view, int position, long id) {
 
-        Integer channelID = listChannels[position].getChannelID();
+        Integer channelID = (int)id;
 
         Intent ChanAct = new Intent(getApplicationContext(), ChannelActivity.class);
         ChanAct.putExtra("channelID", channelID);
@@ -62,16 +44,4 @@ public class ListChannelsActivity extends AppCompatActivity implements AdapterVi
         startActivity(ChanAct);
     }
 
-    @Override
-    public void onWSResponseUpdate(String response) {
-        Gson gson = new Gson();
-
-        ChannelsResponseList channels = gson.fromJson(response, ChannelsResponseList.class);
-
-        listChannels = channels.getItems();
-
-        lvChannels.setAdapter(new ChannelsAdapter(channels.getItems(), this));
-
-        Log.d("reponse: ", listChannels[0].getName());
-    }
 }

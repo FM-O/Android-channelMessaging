@@ -23,13 +23,13 @@ import florian.michel.channelmessaging.login.LoginActivity;
 import florian.michel.channelmessaging.network.OnWSUpdateListener;
 import florian.michel.channelmessaging.network.WSRequestAsyncTask;
 
-public class ChannelActivity extends AppCompatActivity implements OnWSUpdateListener, View.OnClickListener {
+public class ChannelActivity extends AppCompatActivity {
 
-    private HashMap<String,String> requestedParams = new HashMap<>();
-    private ListView lvMessages;
-    private Handler mMessageHandler;
-    private EditText messageSender;
-    private Button sendButton;
+//    private HashMap<String,String> requestedParams = new HashMap<>();
+//    private ListView lvMessages;
+//    private Handler mMessageHandler;
+//    private EditText messageSender;
+//    private Button sendButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,14 +37,14 @@ public class ChannelActivity extends AppCompatActivity implements OnWSUpdateList
         setContentView(R.layout.activity_channel);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        lvMessages = (ListView) findViewById(R.id.listViewMessages);
-        messageSender = (EditText) findViewById(R.id.editSendMessage);
-        sendButton = (Button) findViewById(R.id.btnSendMessage);
-        sendButton.setOnClickListener(this);
+//        lvMessages = (ListView) findViewById(R.id.listViewMessages);
+//        messageSender = (EditText) findViewById(R.id.editSendMessage);
+//        sendButton = (Button) findViewById(R.id.btnSendMessage);
+//        sendButton.setOnClickListener(this);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        Intent listChan = getIntent();
+        /*Intent listChan = getIntent();
 
         Integer channelID = listChan.getIntExtra("channelID", 0);
         this.requestedParams.put("channelid", String.valueOf(channelID));
@@ -69,9 +69,10 @@ public class ChannelActivity extends AppCompatActivity implements OnWSUpdateList
             }
         };
 
-        mMessageHandler.post(r);
-
+        mMessageHandler.post(r);*/
     }
+
+   /* }
 
     @Override
     public void onWSResponseUpdate(String response) {
@@ -96,4 +97,8 @@ public class ChannelActivity extends AppCompatActivity implements OnWSUpdateList
         WSRequestAsyncTask request = new WSRequestAsyncTask(this.getApplicationContext(), "http://www.raphaelbischof.fr/messaging/?function=sendmessage", params);
         request.execute();
     }
+
+    */
 }
+
+
