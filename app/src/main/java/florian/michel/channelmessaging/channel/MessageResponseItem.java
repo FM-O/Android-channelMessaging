@@ -10,6 +10,8 @@ public class MessageResponseItem {
     private String date;
     private String imageUrl;
     private String username;
+    private Double latitude;
+    private Double longitude;
 
     public String getUsername() {
         return username;
@@ -29,5 +31,13 @@ public class MessageResponseItem {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
     }
 }

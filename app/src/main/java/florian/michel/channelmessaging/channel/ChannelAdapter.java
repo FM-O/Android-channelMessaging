@@ -64,12 +64,14 @@ public class ChannelAdapter extends BaseAdapter {
         View rowView = inflater.inflate(R.layout.messagerowlayout, parent, false);
         TextView tvUserMessage = (TextView) rowView.findViewById(R.id.tvUserMesage);
         TextView tvDate = (TextView) rowView.findViewById(R.id.tvDate);
+        TextView tvLocation = (TextView) rowView.findViewById(R.id.tvLocation);
         ImageView userImg = (ImageView) rowView.findViewById(R.id.userPhoto);
         Picasso.with(context).load(items[position].getImageUrl()).resize(100, 100).transform(new CircleTransform()).into(userImg);
         //new DownloadImageTask((ImageView) rowView.findViewById(R.id.userPhoto)).execute(items[position].getImageUrl());
 
         tvUserMessage.setText(items[position].getUsername() + " : " + items[position].getMessage());
         tvDate.setText(items[position].getDate());
+        tvLocation.setText(items[position].getLatitude() + " : " + items[position].getLongitude());
         return rowView;
     }
 
