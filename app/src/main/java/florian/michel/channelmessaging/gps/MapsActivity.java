@@ -19,6 +19,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private LatLng location = new LatLng(45.92,6.15);
+    private String username = null;
     private CameraPosition cameraPosition = new CameraPosition(location, 14, 0, 0);
 
     @Override
@@ -33,6 +34,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Intent messageAct = getIntent();
 
         location = new LatLng(messageAct.getDoubleExtra("latitude", 45),messageAct.getDoubleExtra("longitude", 6));
+        username = messageAct.getStringExtra("username");
         cameraPosition = new CameraPosition(location, 14, 0, 0);
     }
 
@@ -61,7 +63,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void setUpMap() {
         mMap.addMarker(new MarkerOptions()
                 .position(location)
-                .title("username"));
+                .title(username));
 
         CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(this.cameraPosition);
 

@@ -9,7 +9,6 @@ import android.widget.AdapterView;
 
 import florian.michel.channelmessaging.R;
 import florian.michel.channelmessaging.channel.ChannelActivity;
-import florian.michel.channelmessaging.channelfragments.ChannelListFragment;
 import florian.michel.channelmessaging.channelfragments.MessageFragment;
 import florian.michel.channelmessaging.gps.GPSActivity;
 
@@ -31,17 +30,18 @@ public class ListChannelsActivity extends GPSActivity implements AdapterView.OnI
 
         Log.d("channel id:", String.valueOf(channelID));
 
-        ChannelListFragment chfrag = (ChannelListFragment)getSupportFragmentManager().findFragmentById(R.id.fragListChannel);
+//        ChannelListFragment chfrag = (ChannelListFragment)getSupportFragmentManager().findFragmentById(R.id.fragListChannel);
         MessageFragment msgfrag = (MessageFragment)getSupportFragmentManager().findFragmentById(R.id.fragChannelMessage);
 
         if (msgfrag == null || !msgfrag.isInLayout()) {
             Intent ChanAct = new Intent(getApplicationContext(), ChannelActivity.class);
             ChanAct.putExtra("channelID", channelID);
+            ChanAct.putExtra("Latitude", mCurrentLocation.getLatitude());
+            ChanAct.putExtra("Longitude", mCurrentLocation.getLongitude());
 
             startActivity(ChanAct);
         } else {
-
-            msgfrag.updateChannel(channelID);
+            msgfrag.updateChannel(channelID, mCurrentLocation);
         }
     }
 

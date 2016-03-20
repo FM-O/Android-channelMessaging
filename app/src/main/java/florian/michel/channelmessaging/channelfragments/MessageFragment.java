@@ -22,10 +22,8 @@ import com.google.gson.Gson;
 import java.util.HashMap;
 
 import florian.michel.channelmessaging.R;
-import florian.michel.channelmessaging.channel.ChannelActivity;
 import florian.michel.channelmessaging.channel.ChannelAdapter;
 import florian.michel.channelmessaging.channel.MessageResponseList;
-import florian.michel.channelmessaging.gps.GPSActivity;
 import florian.michel.channelmessaging.gps.MapsActivity;
 import florian.michel.channelmessaging.login.LoginActivity;
 import florian.michel.channelmessaging.network.OnWSUpdateListener;
@@ -61,6 +59,8 @@ public class MessageFragment extends Fragment implements OnWSUpdateListener, Vie
         Intent listChan = getActivity().getIntent();
 
         this.channelID = listChan.getIntExtra("channelID", 0);
+        this.currentLocation.setLatitude(listChan.getDoubleExtra("Latitude",0));
+        this.currentLocation.setLongitude(listChan.getDoubleExtra("Longitude", 0));
 
         this.requestedParams.put("channelid", String.valueOf(this.channelID));
         Log.d("requestedParams:", String.valueOf(this.channelID));
@@ -108,6 +108,7 @@ public class MessageFragment extends Fragment implements OnWSUpdateListener, Vie
         params = this.requestedParams;
 
         params.put("message", messageSender.getText().toString());
+
         params.put("latitude", String.valueOf(this.currentLocation.getLatitude()));
         params.put("longitude", String.valueOf(this.currentLocation.getLongitude()));
 
@@ -115,8 +116,9 @@ public class MessageFragment extends Fragment implements OnWSUpdateListener, Vie
         request.execute();
     }
 
-    public void updateChannel(Integer channelID) {
+    public void updateChannel(Integer channelID, Location location) {
         this.channelID = channelID;
+        this.currentLocation = location;
         this.requestedParams.remove("channelid");
         this.requestedParams.put("channelid", String.valueOf(this.channelID));
     }
@@ -134,6 +136,7 @@ public class MessageFragment extends Fragment implements OnWSUpdateListener, Vie
                             Intent MapsAct = new Intent(getActivity().getApplicationContext(), MapsActivity.class);
                             MapsAct.putExtra("latitude", messages.getItems()[position].getLatitude());
                             MapsAct.putExtra("longitude", messages.getItems()[position].getLongitude());
+                            MapsAct.putExtra("username", messages.getItems()[position].getUsername());
 
                             startActivity(MapsAct);
                         } else {

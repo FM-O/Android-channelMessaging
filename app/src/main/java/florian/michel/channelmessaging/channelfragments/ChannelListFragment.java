@@ -60,8 +60,6 @@ public class ChannelListFragment extends Fragment implements OnWSUpdateListener 
 
         listChannels = channels.getItems();
 
-        lvFragment.setAdapter(new ChannelsAdapter(channels.getItems(), getActivity()));
-
-        Log.d("reponse: ", listChannels[0].getName());
+        lvFragment.setAdapter(new ChannelsAdapter(listChannels, getActivity()));
     }
 }
