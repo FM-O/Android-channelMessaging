@@ -30,14 +30,19 @@ public class ListChannelsActivity extends GPSActivity implements AdapterView.OnI
 
         Log.d("channel id:", String.valueOf(channelID));
 
+        Log.d("location----", String.valueOf(mCurrentLocation));
+
 //        ChannelListFragment chfrag = (ChannelListFragment)getSupportFragmentManager().findFragmentById(R.id.fragListChannel);
         MessageFragment msgfrag = (MessageFragment)getSupportFragmentManager().findFragmentById(R.id.fragChannelMessage);
 
         if (msgfrag == null || !msgfrag.isInLayout()) {
             Intent ChanAct = new Intent(getApplicationContext(), ChannelActivity.class);
             ChanAct.putExtra("channelID", channelID);
-            ChanAct.putExtra("Latitude", mCurrentLocation.getLatitude());
-            ChanAct.putExtra("Longitude", mCurrentLocation.getLongitude());
+
+            if (mCurrentLocation != null) {
+                ChanAct.putExtra("Latitude", mCurrentLocation.getLatitude());
+                ChanAct.putExtra("Longitude", mCurrentLocation.getLongitude());
+            }
 
             startActivity(ChanAct);
         } else {

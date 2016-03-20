@@ -2,6 +2,7 @@ package florian.michel.channelmessaging.network;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -37,7 +38,6 @@ public class WSRequestAsyncTask extends AsyncTask<Long, Integer, String> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        Toast.makeText(context, "Début tâche",Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -54,8 +54,6 @@ public class WSRequestAsyncTask extends AsyncTask<Long, Integer, String> {
     }
 
     protected void onPostExecute(String result) {
-
-        //Toast.makeText(context, "Somme = "+result.toString(), Toast.LENGTH_SHORT).show();
 
         for (OnWSUpdateListener listener : listeners) {
             listener.onWSResponseUpdate(result);
@@ -88,9 +86,10 @@ public class WSRequestAsyncTask extends AsyncTask<Long, Integer, String> {
                     response += line;
                 }
             } else {
-                response = "";
+                response = null;
             }
         } catch(Exception e) {
+            response = null;
             e.printStackTrace();
         }
 

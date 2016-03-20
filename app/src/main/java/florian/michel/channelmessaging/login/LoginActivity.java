@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -48,12 +49,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View v) {
 
-        //logs.put("username", login_id.getText().toString());
-        //logs.put("password", pass_id.getText().toString());
+        logs.put("username", login_id.getText().toString());
+        logs.put("password", pass_id.getText().toString());
 
         /*************** TEST USAGE ****************/
-        logs.put("username","fmich");
-        logs.put("password","florianmichel");
+//        logs.put("username","fmich");
+//        logs.put("password","florianmichel");
         /******************************************/
 
         WSRequestAsyncTask request = new WSRequestAsyncTask(this.getApplicationContext(),"http://www.raphaelbischof.fr/messaging/?function=connect", logs);
@@ -88,18 +89,24 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         Gson gson = new Gson();
 
         ConnectionResponse token = gson.fromJson(response, ConnectionResponse.class);
-        Log.d("reponse:", response);
 
-        if (token.getCode().equals("200") && token.getResponse().equals("Ok")) {
-            SharedPreferences settings = getSharedPreferences(PREFS_FILE, 0);
-            SharedPreferences.Editor editor = settings.edit();
-            editor.putString(ACCESS_TOKEN, token.getAccesstoken());
+        if (response != null) {
 
-            editor.commit();
+            if (token.getCode().equals("200") && token.getResponse().equals("Ok")) {
+                SharedPreferences settings = getSharedPreferences(PREFS_FILE, 0);
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putString(ACCESS_TOKEN, token.getAccesstoken());
 
-            Intent listChanAct = new Intent(getApplicationContext(), ListChannelsActivity.class);
+                editor.commit();
 
-            startActivity(listChanAct);
-        }
+                Intent listChanAct = new Intent(getApplicationContext(), ListChannelsActivity.class);
+
+                startActivity(listChanAct);
+            } else if (!token.getCode().equals("200") && token.getResponse().equals("Mauvais identifiants")) {
+                Toast.makeText(getApplicationContext(), "Mauvais identifiants !", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getApplicationContext(), "Une erreur est survenue, connexion impossible", Toast.LENGTH_SHORT).show();
+            }
+        } else { Toast.makeText(getApplicationContext(), "Something went wrong, please check your connection", Toast.LENGTH_SHORT).show(); }
     }
 }
