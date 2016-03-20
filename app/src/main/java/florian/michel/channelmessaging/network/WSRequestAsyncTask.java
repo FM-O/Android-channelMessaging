@@ -37,6 +37,7 @@ public class WSRequestAsyncTask extends AsyncTask<Long, Integer, String> {
 
     @Override
     protected void onPreExecute() {
+        Toast.makeText(context, "Request sent", Toast.LENGTH_SHORT).show();
         super.onPreExecute();
     }
 
